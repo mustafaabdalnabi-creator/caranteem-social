@@ -57,11 +57,10 @@ const SC=[
  [19.6,21.6,(t,lt)=>bg()+grid(t)+word('ما تحفظ ولا تخمّن.',540,840,110,'#fff',eio(lt/.3))+word('ضيف رقم الشاصي…',540,1010,96,G,eio((lt-.4)/.35),800)+word('والمطابقة علينا.',540,1140,116,R,eio((lt-.8)/.35))],
  [21.6,26.0,(t,lt)=>endcard(lt)]
 ];
-function endcard(lt){const p=eio(lt/.6),q=back((lt-.3)/.5),r=eio((lt-.8)/.5),u=eio((lt-1.3)/.5),v=eio((lt-1.8)/.5);
+function endcard(lt){const p=eio(lt/.6),q=back((lt-.3)/.5),r=eio((lt-.8)/.5),u=eio((lt-1.0)/.5),v=eio((lt-1.8)/.5);
  let s=`<rect width="1080" height="1920" fill="url(#spot)"/>`;
  s+=word('اكتبلنا جيل سيارتك بالتعليقات 👇',540,520,62,'#fff',p,800);
- s+=`<g transform="translate(540 800) scale(${q})"><rect x="-100" y="-100" width="200" height="200" rx="46" fill="${R}"/><image href="emblem.png" x="-61" y="-73" width="122" height="146"/></g>`;
- s+=`<g opacity="${r}"><image href="logo_w.png" x="250" y="960" width="580" height="118"/></g>`;
+ s+=`<g opacity="${r}" transform="translate(0 ${(1-q)*20})"><image href="logo_w.png" x="190" y="820" width="700" height="143"/></g>`;
  s+=word('قطع أصلية مطابقة برقم الشاصي',540,1210,58,G,u,800);
  s+=`<g opacity="${v}"><rect x="200" y="1300" width="680" height="110" rx="55" fill="${R}"/><text x="540" y="1372" text-anchor="middle" font-size="50" font-weight="900" fill="#fff">حمّل تطبيق كارانتيم</text>
  <text x="540" y="1500" text-anchor="middle" font-size="44" font-weight="800" fill="#fff">واتساب 0785040907</text></g>`;
