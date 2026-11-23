@@ -1,0 +1,62 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:500;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-500-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-800-normal.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;background:#0B0B0E;font-family:TJ;color:#fff}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#C8102E',G='#4ade80';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>1-Math.pow(1-cl(x),3);
+const pop=(t,t0,d=.35)=>ease((t-t0)/d);
+const back=x=>{x=cl(x);const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+function grid(t){let s='';for(let i=0;i<14;i++){s+=`<line x1="${i*80+(t*20)%80}" y1="0" x2="${i*80+(t*20)%80}" y2="1920" stroke="#fff" stroke-opacity=".03"/>`}return s}
+function vis(k,cx,cy,t){
+ if(k==='src'){ // pads box + two labels: known source vs "بضاعة ممتازة"
+  const p=pop(t,.5);return `<g transform="translate(${cx} ${cy})"><image href="c_ak.png" x="-230" y="-170" width="460" height="315" opacity="${pop(t,0)}"/>
+  <g opacity="${p}" transform="translate(-250 210)"><rect x="-150" y="-50" width="300" height="100" rx="26" fill="#14261b" stroke="${G}" stroke-width="4"/><text y="16" text-anchor="middle" font-size="40" font-weight="800" fill="${G}">✓ وكيل معروف</text></g>
+  <g opacity="${pop(t,.9)}" transform="translate(250 210)"><rect x="-170" y="-50" width="340" height="100" rx="26" fill="#2a1015" stroke="${R}" stroke-width="4"/><text y="16" text-anchor="middle" font-size="40" font-weight="800" fill="#ff5a70">✗ «بضاعة ممتازة»</text></g></g>`}
+ if(k==='num'){ // box + magnified part number
+  const p=pop(t,.6);let bars='';for(let i=0;i<34;i++)bars+=`<rect x="${-200+i*12}" y="-30" width="${[4,7,3,8,5][i%5]}" height="80" fill="#111"/>`;
+  return `<g transform="translate(${cx} ${cy})"><image href="c_denso2.png" x="-220" y="-230" width="440" height="${440*0.75}" opacity="${pop(t,0)}"/>
+  <g opacity="${p}" transform="translate(0 ${200-20*(1-p)})"><rect x="-260" y="-80" width="520" height="230" rx="24" fill="#fff"/>${bars}<text y="110" text-anchor="middle" font-size="54" font-weight="900" fill="#111" direction="ltr">IXEH22TT</text><circle cx="230" cy="-60" r="40" fill="${R}"/><text x="230" y="-46" text-anchor="middle" font-size="40" font-weight="900" fill="#fff">#</text></g></g>`}
+ if(k==='vin'){ // registration card with VIN + match tick
+  const p=pop(t,.2),q=pop(t,1.1);const vin='KMHD841CBKU••4821';const n=Math.floor(cl((t-.3)/1)*vin.length);
+  return `<g transform="translate(${cx} ${cy})"><g opacity="${p}"><rect x="-380" y="-200" width="760" height="330" rx="30" fill="#e9eef3"/><rect x="-380" y="-200" width="760" height="70" rx="30" fill="#2e5aa8"/><rect x="-380" y="-160" width="760" height="30" fill="#2e5aa8"/><text y="-150" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">رخصة المركبة</text>
+  <text x="330" y="-60" font-size="30" font-weight="800" fill="#555" text-anchor="start">رقم الشاصي</text><rect x="-330" y="-30" width="660" height="90" rx="14" fill="#fff" stroke="${R}" stroke-width="5"/><text y="30" text-anchor="middle" font-size="46" font-weight="900" fill="#111" direction="ltr" font-family="monospace">${vin.slice(0,n)}</text></g>
+  <g opacity="${q}" transform="translate(0 ${260}) scale(${back((t-1.1)/.4)})"><rect x="-300" y="-56" width="600" height="112" rx="56" fill="#14261b" stroke="${G}" stroke-width="5"/><text y="18" text-anchor="middle" font-size="44" font-weight="900" fill="${G}">✓ مطابقة لسيارتك</text></g></g>`}
+ return ''}
+const Q=[
+ {k:'src',n:'1',h:'شو مصدرها؟',s:'اسأل: من أي وكيل أو موزّع؟ إذا الجواب «بضاعة ممتازة» وبس… انتبه.'},
+ {k:'num',n:'2',h:'شو رقمها؟',s:'كل قطعة أصلية إلها رقم على العلبة والقطعة نفسها. اطلب تشوفه وقارنه.'},
+ {k:'vin',n:'3',h:'مطابقة لشاصي سيارتي؟',s:'نفس الموديل بسنين أو محركات مختلفة بتختلف قطعه. الشاصي هو الحكم.'}];
+const T={hookEnd:3.6,slide:5.2};T.cta=T.hookEnd+Q.length*T.slide;T.end=T.cta+4.6;const TOTAL=T.end+2.6;
+function frame(t){let s=`<rect width="1080" height="1920" fill="#0B0B0E"/>`+grid(t);
+ if(t<T.hookEnd){const p=pop(t,0);
+  s+=`<g opacity="${p}"><text x="540" y="560" text-anchor="middle" font-size="70" font-weight="800" fill="#bbb">قبل ما تدفع على أي قطعة…</text>
+  <text x="540" y="720" text-anchor="middle" font-size="112" font-weight="900" fill="#fff">اسأل هالـ</text>
+  <text x="540" y="900" text-anchor="middle" font-size="190" font-weight="900" fill="${R}" transform="translate(540 840) scale(${back(t/.6)}) translate(-540 -840)">3 أسئلة</text></g>`;
+  s+=`<text x="540" y="1180" text-anchor="middle" font-size="50" font-weight="800" fill="#aaa" opacity="${pop(t,1.4)}">الثالث هو اللي بيوفّر عليك 👇</text>`;
+  s+=`<g opacity="${pop(t,1.8)}"><rect x="300" y="1320" width="480" height="96" rx="48" fill="#1d1d22" stroke="#333" stroke-width="3"/><text x="540" y="1382" text-anchor="middle" font-size="42" font-weight="800" fill="#fff">احفظ الفيديو 🔖</text></g>`;
+ } else if(t<T.cta){const i=Math.min(Q.length-1,Math.floor((t-T.hookEnd)/T.slide)),lt=(t-T.hookEnd)%T.slide,x=Q[i];
+  const pin=pop(lt,0,.3),out=lt>T.slide-.3?1-ease((lt-(T.slide-.3))/.3):1,o=Math.min(pin,out);
+  s+=`<g opacity="${o}" transform="translate(${(1-pin)*80} 0)">`;
+  s+=`<text x="540" y="250" text-anchor="middle" font-size="40" font-weight="800" fill="#888">السؤال</text><circle cx="540" cy="360" r="86" fill="${R}"/><text x="540" y="396" text-anchor="middle" font-size="100" font-weight="900" fill="#fff" direction="ltr">${x.n}</text>`;
+  s+=`<text x="540" y="580" text-anchor="middle" font-size="${x.h.length>14?76:92}" font-weight="900" fill="#fff">${x.h}</text>`;
+  s+=vis(x.k,540,1000,lt);
+  s+=`<foreignObject x="80" y="1400" width="920" height="380"><div xmlns="http://www.w3.org/1999/xhtml" style="direction:rtl;text-align:center;font-family:TJ;font-weight:800;font-size:48px;line-height:1.55;color:#ddd">${x.s}</div></foreignObject>`;
+  s+=`<g>${Q.map((_,j)=>`<rect x="${420+j*90}" y="1820" width="70" height="10" rx="5" fill="${j<=i?R:'#333'}"/>`).join('')}</g></g>`;
+ } else if(t<T.end){const lt=t-T.cta;
+  s+=`<g opacity="${pop(lt,0)}"><text x="540" y="520" text-anchor="middle" font-size="62" font-weight="800" fill="#ccc">بكارانتيم ما بتحتاج تسأل</text>
+  <text x="540" y="680" text-anchor="middle" font-size="104" font-weight="900" fill="#fff">القطعة بتطلعلك</text>
+  <text x="540" y="820" text-anchor="middle" font-size="104" font-weight="900" fill="${R}">مطابقة بالشاصي</text></g>`;
+  ['قطع أصلية من مصادر معروفة','رقم القطعة واضح','مطابقة برقم الشاصي','توصيل لباب البيت'].forEach((l,j)=>{const q=pop(lt,.6+j*.35,.3);
+   s+=`<g opacity="${q}" transform="translate(${(1-q)*-60} 0)"><rect x="170" y="${960+j*130}" width="740" height="100" rx="50" fill="#1d1d22" stroke="#333" stroke-width="3"/><text x="540" y="${1026+j*130}" text-anchor="middle" font-size="46" font-weight="800" fill="#fff">✓ ${l}</text></g>`});
+ } else {const lt=t-T.end;
+  s+=`<g opacity="${pop(lt,0)}"><image href="logo_w.png" x="215" y="760" width="650" height="132"/><text x="540" y="1010" text-anchor="middle" font-size="50" font-weight="800" fill="#fff">اطلب من التطبيق أو عالواتساب</text><rect x="240" y="1080" width="600" height="104" rx="52" fill="${R}"/><text x="540" y="1148" text-anchor="middle" font-size="46" font-weight="900" fill="#fff">ابعتها لصاحب سيارة 🚗</text></g>`;}
+ document.getElementById('st').innerHTML=s;}
+window.TOTAL=TOTAL;frame(0);
+</script></body></html>

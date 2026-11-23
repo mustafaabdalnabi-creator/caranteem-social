@@ -1,0 +1,56 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#fff}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#D0102C',W='#FFFFFF',K='#111114',BPM=124,B=60/BPM;
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3);
+const back=x=>{x=cl(x);const c=2;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs><filter id="blk"><feColorMatrix type="matrix" values="0 0 0 0 .07  0 0 0 0 .07  0 0 0 0 .08  0 0 0 1 0"/></filter><filter id="sh"><feDropShadow dx="0" dy="24" stdDeviation="18" flood-opacity=".28"/></filter></defs>`;
+// scenes: [beats, bg, render(lt, bl) ] lt=seconds local, bl=beats local
+function lines(arr,fg,y0,size,lt,gap){ // arr of strings, each line pops on a sub-beat
+ let s='';arr.forEach((l,i)=>{const t0=i*0.18;const p=back((lt-t0)/0.28);if(lt<t0)return;
+  s+=`<text x="540" y="${y0+i*gap}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}" transform="translate(540 ${y0+i*gap-size/3}) scale(${0.6+0.4*p}) translate(-540 ${-(y0+i*gap-size/3)})" opacity="${cl(p*1.5)}">${l}</text>`});return s}
+function fly(img,w,x0,y0,x1,y1,lt,dur=0.45,rot=-18){const p=ease(lt/dur);const x=x0+(x1-x0)*p,y=y0+(y1-y0)*p;const fl=Math.sin(lt*3)*8;
+ return `<g transform="translate(${x} ${y+fl}) rotate(${rot*(1-p)+Math.sin(lt*2)*3})" filter="url(#sh)"><image href="${img}" x="${-w/2}" y="${-w/2}" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet"/></g>`}
+function echo(txt,fg,lt,size=150){let s='';const n=9;
+ for(let i=0;i<n;i++){const off=(i-4)*size*0.82;const p=ease((lt-Math.abs(i-4)*0.04)/0.3);if(i===4)continue;
+  s+=`<text x="540" y="${980+off*p}" text-anchor="middle" font-size="${size}" font-weight="900" fill="none" stroke="${fg}" stroke-width="3" opacity="${(1-Math.abs(i-4)/5)*p}">${txt}</text>`}
+ s+=`<text x="540" y="980" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}">${txt}</text>`;return s}
+function check(txt,bg,fg,lt){const p=back(lt/0.35);
+ return `<g transform="translate(540 760) scale(${p})"><circle r="120" fill="${fg}"/><path d="M-52 4 L-14 42 L58 -40" stroke="${bg}" stroke-width="30" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="200" stroke-dashoffset="${200*(1-ease((lt-0.15)/0.3))}"/></g>`+lines(txt,fg,1060,96,lt-0.2,118)}
+const OILS=['o_tot.png','sf.png','c_lm.png','o_kixx.png','o_valv.png'];
+function rain(t,n,big){let s='';for(let k=0;k<n;k++){const img=OILS[k%5],w=big?420:300;const x=[220,860,540,300,780][k%5],y0=2300+k*90,y1=[1350,1380,1500,1700,1690][k%5];s+=fly(img,w,x,y0,x,y1,t-k*0.07,0.45,k%2?18:-18)}return s}
+function stream(t){let s='';for(let k=0;k<5;k++){const img=OILS[k];const x=1500-((t*1400+k*420)%2600);s+=`<g transform="translate(${x} 1420) rotate(${Math.sin(t*3+k)*6})" filter="url(#sh)"><image href="${img}" x="-190" y="-190" width="380" height="380"/></g>`}return s}
+function big(txt,fg,lt,y=1080,size=330){const p=back(lt/0.35);return `<text x="540" y="${y}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}" transform="translate(540 ${y-size/3}) scale(${0.5+0.5*p}) translate(-540 ${-(y-size/3)})" direction="rtl">${txt}</text>`}
+const SC=[
+ [3,W,(t)=>lines(['كل يوم','عرض زيت جديد','لسيارتك…'],R,520,140,t,165)+stream(t)],
+ [3,R,(t)=>lines(['وكل عرض','أرخص من','اللي قبله!'],W,700,160,t,185)],
+ [3,W,(t)=>lines(['وإنت محتار:','من وين تشتري؟'],K,880,140,t,175)],
+ [3,R,(t)=>lines(['إذا بدك','الأرخص…'],W,880,190,t,215)],
+ [2,W,(t)=>lines(['الفيسبوك'],R,980,190,t,0)],
+ [2,R,(t)=>echo('مليان عروض!',W,t,140)],
+ [4,K,(t)=>lines(['كارانتيم','مش صفحة','فيسبوك.'],W,760,190,t,215)],
+ [4,W,(t)=>lines(['كارانتيم:','زيت أصلي','من الوكيل.'],R,460,150,t,175)+rain(t-0.3,5,true)],
+ [3,R,(t)=>lines(['كارانتيم','مش لأي حدا…'],W,880,150,t,190)],
+ [2,W,(t)=>lines(['بس للي','بيقدّر'],K,920,170,t,200)],
+ [2,R,(t)=>echo('القيمة.',W,t,190)],
+ [4,W,(t)=>lines(['للي ما بيختصر','الجودة','عشان يوفر','قرشين.'],K,620,150,t,190)],
+ [3,R,(t)=>lines(['على زيت بخدم','محرّك سيارته'],W,760,130,t,160)],
+ [2,W,(t)=>big('5 أشهر',R,t,1060,240)+rain(t-0.1,5,false)],
+ [2,K,(t)=>{const p=back(t/0.35);return `<g transform="translate(540 960) scale(${0.6+0.4*p})"><image href="logo_w.png" x="-440" y="-90" width="880" height="179"/></g>`}],
+ [5,R,(t)=>{const p=back(t/0.45);return `<g transform="translate(540 700) scale(${p})"><image href="logo_w.png" x="-400" y="-81" width="800" height="163"/></g>`+lines(['اطلب من التطبيق'],W,1000,130,t-0.3,0)+`<g opacity="${ease((t-0.8)/0.4)}"><rect x="240" y="1140" width="600" height="110" rx="55" fill="${W}"/><text x="540" y="1212" text-anchor="middle" font-size="48" font-weight="900" fill="${R}">App Store · Google Play</text></g>`}]
+];
+let acc=0;const ST=SC.map(s=>{const a=acc;acc+=s[0];return a});const TOT=acc*B+0.6;
+window.CUTS=ST; window.TOTAL=TOT;
+function frame(t){let i=SC.length-1;for(let k=0;k<SC.length;k++)if(t>=ST[k]*B)i=k;const lt=t-ST[i]*B;const sc=SC[i];
+ // wipe-in: new bg slides from left over previous bg for first 0.12s
+ const prev=SC[Math.max(0,i-1)][1];const wp=ease(lt/0.14);
+ let s=DEF+`<rect width="1080" height="1920" fill="${i?prev:sc[1]}"/><rect x="${(1-wp)*-1080}" width="1080" height="1920" fill="${sc[1]}"/>`;
+ s+=`<g opacity="${cl(lt/0.06)}">${sc[2](lt)}</g>`;
+ document.getElementById('st').innerHTML=s;}
+frame(0);
+</script></body></html>

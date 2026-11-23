@@ -1,0 +1,71 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:700;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-700-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-800-normal.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#000}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#C8102E',K='#0A0A0C',G='#8E8E96';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3),eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.8;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs>
+<radialGradient id="spot" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#26262c"/><stop offset=".6" stop-color="#0d0d10"/><stop offset="1" stop-color="#000"/></radialGradient>
+<linearGradient id="sweep" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="gray"><feColorMatrix type="saturate" values="0"/></filter>
+<filter id="refl"><feGaussianBlur stdDeviation="6"/></filter>
+<linearGradient id="fadeR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="rm"><rect x="0" y="0" width="1080" height="1920" fill="url(#fadeR)"/></mask></defs>`;
+// ---- NOISE: promo tags, no prices ----
+const TAGS=['عرض!','خصم','الأرخص!','آخر يوم','حرق أسعار','عرض خاص','لفترة محدودة','اطلب هلأ!','بلاش تقريباً','عرض العروض'];
+function noise(t,freeze){let s='';const T=freeze??t;
+ for(let k=0;k<26;k++){const ph=(k*0.37)%1,life=0.9,age=((T*1.3+ph)%life)/life;const x=80+((k*263)%920),y=180+((k*541)%1560);
+  const sc=freeze!=null?1:0.6+0.6*ease(age*3);const rot=((k*47)%30)-15;const col=k%3===0?R:(k%3===1?'#fff':'#2a2a30');const fg=k%3===1?K:'#fff';
+  const tag=TAGS[k%TAGS.length];const w=tag.length*34+70;const op=freeze!=null?1:Math.min(1,age*6)*(age>0.85?(1-age)/0.15:1);
+  s+=`<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})" opacity="${op}"><rect x="${-w/2}" y="-46" width="${w}" height="92" rx="14" fill="${col}" ${k%3===1?'stroke="#ddd" stroke-width="3"':''}/><text y="18" text-anchor="middle" font-size="52" font-weight="900" fill="${fg}">${tag}</text></g>`}
+ return s}
+function card(txt,lt,y=960,big=false){const p=back(lt/0.25);return `<g transform="translate(540 ${y}) scale(${0.8+0.2*p})" opacity="${cl(p*1.5)}"><rect x="-470" y="-${big?130:105}" width="940" height="${big?260:210}" rx="10" fill="${K}"/><rect x="-470" y="${big?118:93}" width="940" height="12" fill="${R}"/><text y="${big?28:22}" text-anchor="middle" font-size="${big?84:64}" font-weight="900" fill="#fff">${txt}</text></g>`}
+// ---- typography helpers ----
+function word(txt,x,y,size,fill,p,weight=900){return `<text x="${x}" y="${y+(1-p)*40}" text-anchor="middle" font-size="${size}" font-weight="${weight}" fill="${fill}" opacity="${p}" style="letter-spacing:${(1-p)*-4}px">${txt}</text>`}
+function accent(lt,y,w=320){const p=eio(lt/0.6);return `<rect x="${540-w/2*p}" y="${y}" width="${w*p}" height="8" fill="${R}"/>`}
+// ---- product shots ----
+function shot(img,lt,dur,zoom0,zoom1,cx,cy,size){const p=eio(lt/dur);const z=zoom0+(zoom1-zoom0)*p;const sw=-600+1800*eio((lt-0.2)/(dur*0.8));
+ return `<rect width="1080" height="1920" fill="url(#spot)"/><g transform="translate(540 ${cy}) scale(${z}) translate(${-cx} ${-cy})"><image href="${img}" x="${cx-size/2}" y="${cy-size/2}" width="${size}" height="${size}"/>
+ <g mask="url(#rm)" transform="translate(0 ${2*(cy+size/2)}) scale(1 -1)"><image href="${img}" x="${cx-size/2}" y="${cy-size/2}" width="${size}" height="${size}" opacity=".5" filter="url(#refl)"/></g></g>
+ <rect x="${sw}" y="0" width="300" height="1920" fill="url(#sweep)" transform="skewX(-12)"/>`}
+const SC=[
+ // [start,end,fn]
+ [0.0,1.25,(t,lt)=>`<rect width="1080" height="1920" fill="#141418"/>`+noise(t)+card('كل يوم عرض زيت جديد لسيارتك…',lt)],
+ [1.25,2.5,(t,lt)=>`<rect width="1080" height="1920" fill="#141418"/>`+noise(t)+card('وكل عرض أرخص من اللي قبله!',lt)],
+ [2.5,3.75,(t,lt)=>`<rect width="1080" height="1920" fill="#141418"/>`+noise(t)+card('وإنت محتار: من وين تشتري؟',lt)],
+ [3.75,5.0,(t,lt)=>`<rect width="1080" height="1920" fill="#141418"/>`+noise(t)+card('إذا بدك الأرخص…',lt)],
+ [5.0,6.5,(t,lt)=>{const fz=lt>1.05;return `<rect width="1080" height="1920" fill="#141418"/><g ${fz?'filter="url(#gray)" opacity=".55"':''}>`+noise(t,fz?6.05:null)+`</g>`+card('الفيسبوك مليان عروض!',lt,960,true)}],
+ [6.5,9.0,(t,lt)=>{const p=eio((lt-0.3)/0.5),q=eio((lt-0.55)/0.5);return `<rect width="1080" height="1920" fill="${K}"/>`+word('كارانتيم',540,860,150,'#fff',p)+word('مش صفحة فيسبوك.',540,1030,100,'#fff',q)+accent(lt-0.9,1110,260)}],
+ [9.0,10.5,(t,lt)=>shot('o_tot.png',lt,1.5,1.0,1.12,540,800,760)+lowr(t)],
+ [10.5,12.0,(t,lt)=>shot('c_lm.png',lt,1.5,1.6,1.8,560,760,760)+lowr(t)],
+ [12.0,13.5,(t,lt)=>shot('sf.png',lt,1.5,1.1,1.0,540,800,760)+lowr(t)],
+ [13.5,16.2,(t,lt)=>{const p=eio((lt-0.45)/0.55),q=eio((lt-0.75)/0.55);return `<rect width="1080" height="1920" fill="${K}"/>`+word('كارانتيم',540,820,200,'#fff',p)+word('مش لأي حدا…',540,1050,150,'#fff',q)}],
+ [16.2,18.2,(t,lt)=>{const p=eio(lt/0.45),q=eio((lt-0.4)/0.5);return `<rect width="1080" height="1920" fill="${K}"/>`+word('بس للي بيقدّر',540,880,120,'#fff',p)+word('القيمة.',540,1090,210,R,q)}],
+ [18.2,19.9,(t,lt)=>{const p=eio(lt/0.4),q=eio((lt-0.3)/0.4);return `<rect width="1080" height="1920" fill="${K}"/>`+word('للي ما بيختصر الجودة',540,900,96,'#fff',p,800)+word('عشان يوفر قرشين.',540,1030,96,G,q,800)}],
+ [19.9,21.6,(t,lt)=>{const p=eio(lt/0.4),q=back((lt-0.35)/0.45);return `<rect width="1080" height="1920" fill="${K}"/>`+word('على زيت بخدم محرّك سيارته',540,820,84,'#fff',p,800)+`<g transform="translate(540 1040) scale(${0.7+0.3*q})" opacity="${cl(q)}"><text text-anchor="middle" font-size="230" font-weight="900" fill="${R}">5 أشهر</text></g>`}],
+ [21.6,25.0,(t,lt)=>endcard(lt)]
+];
+function lowr(t){const lt=t-9.0;const p=eio(lt/0.6);return `<rect x="0" y="1480" width="1080" height="440" fill="#000" opacity=".55"/><text x="540" y="${1640+(1-p)*30}" text-anchor="middle" font-size="62" font-weight="800" fill="${G}" opacity="${p}">كارانتيم:</text><text x="540" y="${1760+(1-p)*30}" text-anchor="middle" font-size="86" font-weight="900" fill="#fff" opacity="${p}">زيت أصلي من الوكيل.</text>`+`<rect x="${540-160*p}" y="1800" width="${320*p}" height="7" fill="${R}"/>`}
+function endcard(lt){const p=eio(lt/0.7),q=back((lt-0.4)/0.5),r=eio((lt-0.9)/0.5),u=eio((lt-1.4)/0.5);
+ let s=`<rect width="1080" height="1920" fill="url(#spot)"/>`;
+ s+=`<g opacity="${p}"><image href="sf.png" x="560" y="${420+(1-p)*40}" width="440" height="440"/><image href="o_tot.png" x="80" y="${430+(1-p)*40}" width="440" height="440"/></g>`;
+ s+=`<g transform="translate(540 1010) scale(${q})"><rect x="-95" y="-95" width="190" height="190" rx="44" fill="${R}"/><image href="emblem.png" x="-58" y="-70" width="116" height="139"/></g>`;
+ s+=`<g opacity="${r}"><image href="logo_w.png" x="250" y="1150" width="580" height="118"/></g>`;
+ s+=word('اطلب من التطبيق',540,1400,88,'#fff',u);
+ s+=`<g opacity="${eio((lt-1.9)/0.5)}"><rect x="170" y="1500" width="350" height="104" rx="22" fill="none" stroke="#fff" stroke-width="3"/><text x="345" y="1566" text-anchor="middle" font-size="40" font-weight="800" fill="#fff" direction="ltr">App Store</text><rect x="560" y="1500" width="350" height="104" rx="22" fill="none" stroke="#fff" stroke-width="3"/><text x="735" y="1566" text-anchor="middle" font-size="40" font-weight="800" fill="#fff" direction="ltr">Google Play</text></g>`;
+ return s}
+window.CUTS=SC.map(s=>s[0]);window.TOTAL=25;
+function frame(t){let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const lt=t-SC[i][0];
+ let s=DEF+SC[i][2](t,lt);
+ // hard-cut flash on cut into black statements
+ if([5,9,13].includes(i)&&lt<0.08)s+=`<rect width="1080" height="1920" fill="#fff" opacity="${0.5*(1-lt/0.08)}"/>`;
+ document.getElementById('st').innerHTML=s;}
+frame(0);
+</script></body></html>
