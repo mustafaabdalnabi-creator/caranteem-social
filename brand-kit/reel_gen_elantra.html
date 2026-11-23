@@ -1,0 +1,75 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:700;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-700-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-800-normal.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#000}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#C8102E',K='#0B0B0E',G='#8E8E96';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3),eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.8;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs><radialGradient id="spot" cx="50%" cy="45%" r="62%"><stop offset="0" stop-color="#24242a"/><stop offset=".6" stop-color="#0d0d10"/><stop offset="1" stop-color="#000"/></radialGradient>
+<linearGradient id="sweep" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>`;
+function word(txt,x,y,size,fill,p,weight=900,ltr=false){return `<text x="${x}" y="${y+(1-p)*40}" text-anchor="middle" font-size="${size}" font-weight="${weight}" fill="${fill}" opacity="${p}" ${ltr?'direction="ltr"':''}>${txt}</text>`}
+function bg(){return `<rect width="1080" height="1920" fill="${K}"/>`}
+function grid(t){let s='';for(let i=0;i<15;i++){const x=i*80+(t*24)%80;s+=`<line x1="${x}" y1="0" x2="${x}" y2="1920" stroke="#fff" stroke-opacity=".035"/>`}return s}
+const GEN=[['XD','2000','2006','الجيل الأول'],['HD','2006','2010','الجيل الثاني'],['MD','2010','2015','الجيل الثالث'],['AD','2015','2020','الجيل الرابع'],['CN7','2020','اليوم','الجيل الخامس']];
+const G0=5.6,GD=2.2;
+function timeline(i,lt){let s=`<line x1="160" y1="1500" x2="920" y2="1500" stroke="#333" stroke-width="6"/>`;
+ // rtl: first generation on the right
+ const xs=GEN.map((_,j)=>920-j*190);
+ s+=`<line x1="920" y1="1500" x2="${920-(i+eio(lt/.4)*0)*190}" y2="1500" stroke="${R}" stroke-width="6"/>`;
+ GEN.forEach((g,j)=>{const on=j<=i,cur=j===i;const r=cur?22+6*back(lt/.35)-6:14;
+  s+=`<circle cx="${xs[j]}" cy="1500" r="${r}" fill="${on?R:'#2a2a30'}" ${cur?'stroke="#fff" stroke-width="4"':''}/><text x="${xs[j]}" y="1570" text-anchor="middle" font-size="34" font-weight="800" fill="${cur?'#fff':(on?'#bbb':'#555')}" direction="ltr">${g[0]}</text>`});
+ return s}
+function genScene(i,t,lt){const g=GEN[i];const p=back(lt/.35),q=eio((lt-.25)/.4),r=eio((lt-.5)/.4);
+ const out=lt>GD-.15?1-(lt-(GD-.15))/.15:1;
+ let s=bg()+grid(t)+`<rect width="1080" height="1920" fill="url(#spot)" opacity=".8"/>`;
+ s+=`<text x="540" y="380" text-anchor="middle" font-size="44" font-weight="800" fill="${G}">وقّف هون إذا هاي سيارتك ✋</text>`;
+ s+=`<g opacity="${out}">`;
+ s+=word(g[3],540,560,64,R,q,800);
+ // giant code, outline + fill
+ s+=`<g transform="translate(540 900) scale(${0.75+0.25*p})" opacity="${cl(p)}"><text y="0" text-anchor="middle" font-size="${g[0].length>2?300:360}" font-weight="900" fill="none" stroke="#fff" stroke-width="5" direction="ltr" dx="14" dy="14" opacity=".25">${g[0]}</text><text y="0" text-anchor="middle" font-size="${g[0].length>2?300:360}" font-weight="900" fill="#fff" direction="ltr">${g[0]}</text></g>`;
+ const yr=g[2]==='اليوم'?`${g[1]} ← اليوم`:`${g[1]} – ${g[2]}`;
+ s+=`<g opacity="${r}" transform="translate(0 ${(1-r)*30})"><rect x="250" y="1060" width="580" height="130" rx="65" fill="#16161a" stroke="${R}" stroke-width="4"/><text x="540" y="1148" text-anchor="middle" font-size="72" font-weight="900" fill="#fff" direction="${g[2]==='اليوم'?'rtl':'ltr'}">${g[2]==='اليوم'?'من '+g[1]+' لليوم':g[1]+' – '+g[2]}</text></g>`;
+ s+=`</g>`+timeline(i,lt);
+ s+=`<text x="540" y="1640" text-anchor="middle" font-size="30" font-weight="700" fill="#666">* السنين تقريبية وبتختلف حسب بلد التصنيع</text>`;
+ const sw=-500+1900*eio(lt/1.2);s+=`<rect x="${sw}" y="0" width="260" height="1920" fill="url(#sweep)" transform="skewX(-12)"/>`;
+ return s}
+const PARTS=[['o_ofilt.png','فلتر الزيت',571/432],['o_afilt.png','فلتر الهوا',482/357],['c_mobis.png','البواجي',870/825],['c_ak.png','البريكات',460/315]];
+function partsScene(t,lt){let s=bg()+`<rect width="1080" height="1920" fill="url(#spot)"/>`;
+ s+=word('ليش بتفرق؟',540,470,120,'#fff',eio(lt/.35));
+ s+=word('كل جيل… وكل محرك',540,590,62,G,eio((lt-.2)/.35),800);
+ PARTS.forEach((pp,j)=>{const q=back((lt-.45-j*.28)/.4);const col=j%2,row=Math.floor(j/2);const cx=col?300:780,cy=850+row*400;const w=330,h=w/pp[2];
+  s+=`<g opacity="${cl(q)}" transform="translate(${cx} ${cy}) scale(${0.6+0.4*q}) translate(${-cx} ${-cy})"><image href="${pp[0]}" x="${cx-w/2}" y="${cy-h/2-30}" width="${w}" height="${h}"/><text x="${cx}" y="${cy+175}" text-anchor="middle" font-size="50" font-weight="900" fill="#fff">${pp[1]}</text></g>`});
+ s+=word('قطعه بتختلف',540,1620,92,R,eio((lt-1.7)/.4));
+ return s}
+const SC=[
+ [0.0,1.4,(t,lt)=>bg()+grid(t)+word('عندك النترا؟',540,900,150,'#fff',eio(lt/.3))],
+ [1.4,2.7,(t,lt)=>bg()+grid(t)+word('عندك النترا؟',540,800,110,'#555',1)+word('ولا أفانتي؟',540,1010,170,R,back(lt/.35))],
+ [2.7,4.3,(t,lt)=>bg()+word('نفس الاسم…',540,820,120,'#fff',eio(lt/.3))+word('بس مش نفس القطع.',540,1000,92,R,eio((lt-.45)/.35))],
+ [4.3,5.6,(t,lt)=>bg()+`<rect width="1080" height="1920" fill="url(#spot)"/>`+word('5 أجيال',540,860,200,'#fff',back(lt/.35))+word('اعرف جيل سيارتك 👇',540,1040,76,G,eio((lt-.4)/.35),800)],
+ ...GEN.map((_,i)=>[G0+i*GD,G0+(i+1)*GD,(t,lt)=>genScene(i,t,lt)]),
+ [16.6,19.6,(t,lt)=>partsScene(t,lt)],
+ [19.6,21.6,(t,lt)=>bg()+grid(t)+word('ما تحفظ ولا تخمّن.',540,840,110,'#fff',eio(lt/.3))+word('ضيف رقم الشاصي…',540,1010,96,G,eio((lt-.4)/.35),800)+word('والمطابقة علينا.',540,1140,116,R,eio((lt-.8)/.35))],
+ [21.6,26.0,(t,lt)=>endcard(lt)]
+];
+function endcard(lt){const p=eio(lt/.6),q=back((lt-.3)/.5),r=eio((lt-.8)/.5),u=eio((lt-1.3)/.5),v=eio((lt-1.8)/.5);
+ let s=`<rect width="1080" height="1920" fill="url(#spot)"/>`;
+ s+=word('اكتبلنا جيل سيارتك بالتعليقات 👇',540,520,62,'#fff',p,800);
+ s+=`<g transform="translate(540 800) scale(${q})"><rect x="-100" y="-100" width="200" height="200" rx="46" fill="${R}"/><image href="emblem.png" x="-61" y="-73" width="122" height="146"/></g>`;
+ s+=`<g opacity="${r}"><image href="logo_w.png" x="250" y="960" width="580" height="118"/></g>`;
+ s+=word('قطع أصلية مطابقة برقم الشاصي',540,1210,58,G,u,800);
+ s+=`<g opacity="${v}"><rect x="200" y="1300" width="680" height="110" rx="55" fill="${R}"/><text x="540" y="1372" text-anchor="middle" font-size="50" font-weight="900" fill="#fff">حمّل تطبيق كارانتيم</text>
+ <text x="540" y="1500" text-anchor="middle" font-size="44" font-weight="800" fill="#fff">واتساب 0785040907</text></g>`;
+ return s}
+window.CUTS=SC.map(s=>s[0]);window.TOTAL=26;
+function frame(t){let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const lt=t-SC[i][0];
+ let s=DEF+SC[i][2](t,lt);
+ if(lt<0.07&&i>0)s+=`<rect width="1080" height="1920" fill="#fff" opacity="${0.35*(1-lt/0.07)}"/>`;
+ document.getElementById('st').innerHTML=s;}
+frame(0);
+</script></body></html>
