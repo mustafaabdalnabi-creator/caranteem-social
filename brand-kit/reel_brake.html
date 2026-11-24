@@ -30,18 +30,18 @@ function wave(t,col){let d='';const amp=60+30*Math.sin(t*40);for(let x=90;x<=990
  return `<path d="${d}" stroke="${col}" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`}
 function shake(t,str){const a=str*Math.exp(-t*3);return `translate(${(Math.sin(t*90)*a).toFixed(1)} ${(Math.cos(t*77)*a).toFixed(1)})`}
 function num(n,t){const p=back(t/0.3);return `<g transform="translate(540 600) scale(${p})"><circle r="105" fill="${R}"/><text y="44" text-anchor="middle" font-size="130" font-weight="900" fill="${W}">${n}</text></g>`}
-function endc(t){const p=back(t/0.45);return `<g transform="translate(540 760) scale(${p})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164" filter="url(#blk)"/></g>`+lines(['تيل بريك أصلي','مطابق لسيارتك'],K,1010,96,t-0.3,120)+`<g opacity="${ease((t-0.8)/0.4)}"><rect x="200" y="1200" width="680" height="110" rx="55" fill="${R}"/><text x="540" y="1272" text-anchor="middle" font-size="54" font-weight="900" fill="${W}">اطلب من التطبيق</text><text x="540" y="1410" text-anchor="middle" font-size="44" font-weight="800" fill="#8E8E96">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`}
+function endc(t){const p=back(t/0.45);return `<g transform="translate(540 760) scale(${p})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164" filter="url(#blk)"/></g>`+lines(['فحمات بريك أصلية','مطابقة لسيارتك'],K,1010,92,t-0.3,120)+`<g opacity="${ease((t-0.8)/0.4)}"><rect x="200" y="1200" width="680" height="110" rx="55" fill="${R}"/><text x="540" y="1272" text-anchor="middle" font-size="54" font-weight="900" fill="${W}">اطلب من التطبيق</text><text x="540" y="1410" text-anchor="middle" font-size="44" font-weight="800" fill="#8E8E96">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`}
 const SC=[
  [3,W,(t)=>lines(['بتدعس بريك','وسيارتك…'],K,820,150,t,185)],
  [3,W,(t)=>`<g transform="${shake(t,18)}">`+echo('بتصفّر؟',R,t,190)+wave(t,R)+`</g>`],
  [3,K,(t)=>lines(['هالصوت','مش «عادي».'],W,860,170,t,205)],
  [3,R,(t)=>big('3 أسباب',W,t,960,230)+lines(['قبل ما تتجاهله'],W,1180,90,t-0.3,0)],
- [5,W,(t)=>num('1',t)+lines(['التيل خلص.'],K,940,150,t-0.15,0)+lines(['فيه قطعة صغيرة','بتصفّر لتنبّهك'],'#8E8E96',1140,84,t-0.6,110)],
+ [5,W,(t)=>num('1',t)+lines(['الفحمات خلصت.'],K,940,120,t-0.15,0)+lines(['فيه قطعة صغيرة','بتصفّر لتنبّهك'],'#8E8E96',1140,84,t-0.6,110)],
  [5,W,(t)=>num('2',t)+lines(['رطوبة وغبار.'],K,940,132,t-0.15,0)+lines(['بعد المطر بأول','كم دعسة… وبتروح'],'#8E8E96',1140,84,t-0.6,110)],
- [5,W,(t)=>num('3',t)+lines(['تيل مش مطابق.'],K,940,118,t-0.15,0)+lines(['نوعه أو مقاسه','مش لسيارتك'],'#8E8E96',1140,84,t-0.6,110)],
+ [5,W,(t)=>num('3',t)+lines(['فحمات مش مطابقة.'],K,940,98,t-0.15,0)+lines(['نوعها أو مقاسها','مش لسيارتك'],'#8E8E96',1140,84,t-0.6,110)],
  [4,R,(t)=>lines(['إذا الصوت ضلّ','أو صار «طحن»…'],W,800,130,t,165)+lines(['افحص بريكاتك فوراً'],W,1180,96,t-0.5,0)],
  [3,W,(t)=>lines(['البريك','مش مكان','للتوفير.'],K,700,170,t,200)],
- [5,W,(t)=>lines(['تيل أصلي','مطابق برقم','الشاصي'],R,480,120,t,140)+pads(t-0.3)],
+ [5,W,(t)=>lines(['فحمات أصلية','مطابقة برقم','الشاصي'],R,480,120,t,140)+pads(t-0.3)],
  [2,R,(t)=>echo('قبل الشحن.',W,t,128)],
  [6,W,(t)=>endc(t)]
 ];
