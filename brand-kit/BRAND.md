@@ -10,6 +10,8 @@ App download link: caranteem.com/download.php?q=1  ·  Instagram account id (Win
 - Colors: red #C8102E (accent variants #D0102C / #E0153A), black #0B0B0E / #111114, white, soft gray #8E8E96 and paper #F7F6F3.
 - Font: Tajawal (weights 500/700/800/900), files in node_modules/@fontsource/tajawal/files.
 - Logo: logo_w.png (white; on light backgrounds use the SVG filter in the templates to turn it black). App icon = emblem.png on a red rounded square — app-icon use only (e.g. a phone screen). Do NOT put the red square on end cards or covers: the real logo is never red; end cards use logo_w.png alone (Mustafa, 23/11).
+- On white/light reels and covers the logo must be FULL solid black (Mustafa, 24/11): use the filter values "0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 0" (black + alpha x3), not the old soft-gray one.
+- Wording: say «فحمات البريك» / «فحمات», never «تيل» (Mustafa, 24/11).
 - Rotate the dominant color daily: white -> red -> black -> white ... (check the last published post).
 - Vertical 1080x1920 for reels; keep text inside the centre (y 285-1635) so the 4:5 feed crop never cuts it.
 
