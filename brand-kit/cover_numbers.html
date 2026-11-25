@@ -1,0 +1,66 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-800-normal.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#C8102E}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#C8102E',R2='#E0153A',W='#FFFFFF',K='#0B0B0E',G='#8E8E96',BPM=120,B=60/BPM;
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3);
+const back=x=>{x=cl(x);const c=2;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs><filter id="blk"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 0"/></filter>
+<filter id="sh"><feDropShadow dx="0" dy="22" stdDeviation="18" flood-opacity=".35"/></filter>
+<linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".75"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></linearGradient></defs>`;
+function lines(arr,fg,y0,size,lt,gap){let s='';arr.forEach((l,i)=>{const t0=i*0.16;const p=back((lt-t0)/0.28);if(lt<t0)return;const yy=y0+i*gap;
+  s+=`<text x="540" y="${yy}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}" transform="translate(540 ${yy-size/3}) scale(${0.6+0.4*p}) translate(-540 ${-(yy-size/3)})" opacity="${cl(p*1.5)}">${l}</text>`});return s}
+// odometer: rolling mechanical counter. digits string e.g. "3400"; rolls 0 -> value with last digit fastest
+function odo(val,lt,y,dur=1.3,suffix='+',light=false){const ds=String(val).split('');const n=ds.length;const w=n>4?128:150,h=210,gap=n>4?12:16;
+ const total=n*w+(n-1)*gap+(n>3?28:0);let x0=540-total/2-40;const p=ease(lt/dur);const v=Math.round(val*p);
+ let s=`<g filter="url(#sh)">`;const vs=String(v).padStart(n,'0');
+ // frame
+ s+=`<rect x="${x0-30}" y="${y-h/2-28}" width="${total+60}" height="${h+56}" rx="30" fill="${light?'#1a1a1f':K}"/>`;
+ let x=x0;for(let i=0;i<n;i++){if(n>3&&i===n-3){x+=28}
+  // continuous roll value for this digit
+  const place=Math.pow(10,n-1-i);const cont=(val*p)/place;const d=cont%10;const fl=Math.floor(d),fr=d-fl;
+  const roll=(i===n-1||p<1)?fr:0;
+  s+=`<g><clipPath id="c${i}"><rect x="${x}" y="${y-h/2}" width="${w}" height="${h}" rx="14"/></clipPath><rect x="${x}" y="${y-h/2}" width="${w}" height="${h}" rx="14" fill="#f4f2ee"/><g clip-path="url(#c${i})">`;
+  for(let k=-1;k<=1;k++){const dig=((fl+k)%10+10)%10;const yy=y+70-(k-(p>=1?0:roll))*h;s+=`<text x="${x+w/2}" y="${yy}" text-anchor="middle" font-size="190" font-weight="900" fill="${K}">${p>=1&&k===0?ds[i]:dig}</text>`}
+  s+=`<rect x="${x}" y="${y-h/2}" width="${w}" height="${h}" fill="url(#dg)" opacity=".5"/></g><rect x="${x}" y="${y-2}" width="${w}" height="4" fill="#000" opacity=".18"/></g>`;x+=w+gap}
+ const sp=back((lt-dur)/0.3);
+ s+=`<g transform="translate(${x+52} ${y}) scale(${sp})"><circle r="58" fill="${W}"/><text y="34" text-anchor="middle" font-size="110" font-weight="900" fill="${R}">${suffix}</text></g>`;
+ return s+`</g>`}
+function label(arr,fg,lt,y=1180){return lines(arr,fg,y,104,lt,128)}
+function tag(txt,lt,y=560,bg=K,fg=W){const p=back(lt/0.3);const w=txt.length*40+120;return `<g transform="translate(540 ${y}) scale(${p})"><rect x="${-w/2}" y="-54" width="${w}" height="108" rx="54" fill="${bg}"/><text y="22" text-anchor="middle" font-size="62" font-weight="900" fill="${fg}">${txt}</text></g>`}
+function fly(img,w,x0,y0,x1,y1,lt,dur=0.45,rot=-16){const p=ease(lt/dur);const x=x0+(x1-x0)*p,y=y0+(y1-y0)*p;const fl=Math.sin(lt*3)*8;
+ return `<g transform="translate(${x} ${y+fl}) rotate(${rot*(1-p)+Math.sin(lt*2)*3})" filter="url(#sh)"><image href="${img}" x="${-w/2}" y="${-w/2}" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet"/></g>`}
+// Jordan governorates as 12 dots lighting up on the beat
+function dots(lt){let s='';for(let i=0;i<12;i++){const r=Math.floor(i/4),c=i%4;const x=270+c*180,y=1180+r*150;const p=back((lt-0.25-i*0.07)/0.25);
+  s+=`<circle cx="${x}" cy="${y}" r="${46*p}" fill="${W}"/><path d="M${x-18} ${y} L${x-4} ${y+14} L${x+20} ${y-14}" stroke="${R}" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${cl(p)}"/>`}return s}
+function endc(t){const p=back(t/0.45);return `<g transform="translate(540 760) scale(${p})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164"/></g>`
+ +lines(['قطع أصلية','مطابقة لسيارتك'],W,1010,92,t-0.3,120)
+ +`<g opacity="${ease((t-0.8)/0.4)}"><rect x="200" y="1220" width="680" height="110" rx="55" fill="${W}"/><text x="540" y="1292" text-anchor="middle" font-size="54" font-weight="900" fill="${R}">اطلب من التطبيق</text><text x="540" y="1430" text-anchor="middle" font-size="44" font-weight="800" fill="${W}" opacity=".85">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`}
+const SC=[
+ [4,R,(t)=>tag('عدّاد كارانتيم',t,620)+lines(['وصل','لوين؟'],W,930,210,t-0.25,230)],
+ [6,R,(t)=>odo(3400,t,820)+label(['زبون','وثق فينا'],W,t-0.9)],
+ [6,K,(t)=>odo(5000,t,820,1.3,'+',true)+label(['طلب وصل','لباب البيت'],W,t-0.9)],
+ [6,R,(t)=>odo(15800,t,820)+label(['سيارة محفوظة','بكراج التطبيق'],W,t-0.9)],
+ [5,R,(t)=>lines(['12'],W,860,300,t,0)+lines(['محافظة… وصلنالها كلها'],W,1030,92,t-0.15,0)+dots(t)],
+ [6,W,(t)=>lines(['وكل قطعة','مطابقة','برقم الشاصي'],K,500,128,t,150)+lines(['قبل الشحن.'],R,960,128,t-0.5,0)
+   +fly('o_tot.png',360,260,2300,280,1330,t-0.6,0.45,-14)+fly('c_lm.png',330,540,2350,540,1300,t-0.7,0.45,10)+fly('sf.png',340,820,2300,800,1340,t-0.8,0.45,-10)],
+ [4,R,(t)=>lines(['شكراً','إلكم.'],W,860,230,t,250)],
+ [4,K,(t)=>lines(['وبكرة…'],W,820,150,t,0)+lines(['27/11'],R2,1060,230,t-0.35,0)+lines(['خلّيكم قريبين'],W,1240,80,t-0.7,0)],
+ [7,R,(t)=>endc(t)]
+];
+let acc=0;const ST=SC.map(s=>{const a=acc;acc+=s[0];return a});const TOT=acc*B+0.6;
+window.CUTS=ST.map(x=>+(x*B).toFixed(3)); window.TOTAL=TOT;
+function frame(t){let i=SC.length-1;for(let k=0;k<SC.length;k++)if(t>=ST[k]*B)i=k;const lt=t-ST[i]*B;const sc=SC[i];
+ const prev=SC[Math.max(0,i-1)][1];const wp=ease(lt/0.16);
+ // vertical wipe (up) — new transition vs. last reel's side wipe
+ let s=DEF+`<rect width="1080" height="1920" fill="${i?prev:sc[1]}"/><rect y="${(1-wp)*1920}" width="1080" height="1920" fill="${sc[1]}"/>`;
+ s+=`<g opacity="${cl(lt/0.06)}">${sc[2](lt)}</g>`;
+ document.getElementById('st').innerHTML=s;}
+function cover(){let s=DEF+`<rect width="1080" height="1920" fill="${R}"/>`+tag('عدّاد كارانتيم',1,470)+lines(['وصل لوين؟'],W,700,170,1,0)+odo(5000,2,1000)+lines(['طلب… شكراً إلكم'],W,1300,100,1,0)+`<image href="logo_w.png" x="290" y="1420" width="500" height="102"/>`;document.getElementById('st').innerHTML=s}
+cover();
+</script></body></html>
