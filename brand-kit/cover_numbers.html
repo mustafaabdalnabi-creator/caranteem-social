@@ -43,12 +43,12 @@ function endc(t){const p=back(t/0.45);return `<g transform="translate(540 760) s
  +`<g opacity="${ease((t-0.8)/0.4)}"><rect x="200" y="1220" width="680" height="110" rx="55" fill="${W}"/><text x="540" y="1292" text-anchor="middle" font-size="54" font-weight="900" fill="${R}">اطلب من التطبيق</text><text x="540" y="1430" text-anchor="middle" font-size="44" font-weight="800" fill="${W}" opacity=".85">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`}
 const SC=[
  [4,R,(t)=>tag('عدّاد كارانتيم',t,620)+lines(['وصل','لوين؟'],W,930,210,t-0.25,230)],
- [6,R,(t)=>odo(3400,t,820)+label(['زبون','وثق فينا'],W,t-0.9)],
- [6,K,(t)=>odo(5000,t,820,1.3,'+',true)+label(['طلب وصل','لباب البيت'],W,t-0.9)],
- [6,R,(t)=>odo(15800,t,820)+label(['سيارة محفوظة','بكراج التطبيق'],W,t-0.9)],
+ [6,R,(t)=>odo(15000,t,820)+label(['زبون','وثق فينا'],W,t-0.9)],
+ [6,K,(t)=>odo(30000,t,820,1.3,'+',true)+label(['طلب وصل','لباب البيت'],W,t-0.9)],
+ [6,R,(t)=>odo(25000,t,820)+label(['سيارة محفوظة','بكراج التطبيق'],W,t-0.9)],
  [5,R,(t)=>lines(['12'],W,860,300,t,0)+lines(['محافظة… وصلنالها كلها'],W,1030,92,t-0.15,0)+dots(t)],
  [6,W,(t)=>lines(['وكل قطعة','مطابقة','برقم الشاصي'],K,500,128,t,150)+lines(['قبل الشحن.'],R,960,128,t-0.5,0)
-   +fly('o_tot.png',360,260,2300,280,1330,t-0.6,0.45,-14)+fly('c_lm.png',330,540,2350,540,1300,t-0.7,0.45,10)+fly('sf.png',340,820,2300,800,1340,t-0.8,0.45,-10)],
+   +fly('o_tot.png',360,250,2300,250,1330,t-0.6,0.45,-14)+fly('c_ate.png',340,540,2350,540,1300,t-0.7,0.45,10)+fly('c_denso2.png',330,830,2300,830,1340,t-0.8,0.45,-10)],
  [4,R,(t)=>lines(['شكراً','إلكم.'],W,860,230,t,250)],
  [4,K,(t)=>lines(['وبكرة…'],W,820,150,t,0)+lines(['27/11'],R2,1060,230,t-0.35,0)+lines(['خلّيكم قريبين'],W,1240,80,t-0.7,0)],
  [7,R,(t)=>endc(t)]
@@ -61,6 +61,6 @@ function frame(t){let i=SC.length-1;for(let k=0;k<SC.length;k++)if(t>=ST[k]*B)i=
  let s=DEF+`<rect width="1080" height="1920" fill="${i?prev:sc[1]}"/><rect y="${(1-wp)*1920}" width="1080" height="1920" fill="${sc[1]}"/>`;
  s+=`<g opacity="${cl(lt/0.06)}">${sc[2](lt)}</g>`;
  document.getElementById('st').innerHTML=s;}
-function cover(){let s=DEF+`<rect width="1080" height="1920" fill="${R}"/>`+tag('عدّاد كارانتيم',1,470)+lines(['وصل لوين؟'],W,700,170,1,0)+odo(5000,2,1000)+lines(['طلب… شكراً إلكم'],W,1300,100,1,0)+`<image href="logo_w.png" x="290" y="1420" width="500" height="102"/>`;document.getElementById('st').innerHTML=s}
+function cover(){let s=DEF+`<rect width="1080" height="1920" fill="${R}"/>`+tag('عدّاد كارانتيم',1,470)+lines(['وصل لوين؟'],W,700,170,1,0)+odo(30000,2,1000)+lines(['طلب… شكراً إلكم'],W,1300,100,1,0)+`<image href="logo_w.png" x="290" y="1420" width="500" height="102"/>`;document.getElementById('st').innerHTML=s}
 cover();
 </script></body></html>

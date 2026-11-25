@@ -34,7 +34,7 @@ music_house.py, music_detective.py, music_dark_cinematic.py, music_pop.py (chang
 Mux: ffmpeg -i silent.mp4 -i music.wav -map 0:v -map 1:a -c:v copy -af "loudnorm=I=-16:TP=-1.5" -c:a aac -shortest out.mp4
 
 ## Facts you may use (verified)
-3,400+ customers · 5,000+ orders · 15,800+ cars saved in the app garage · packages: Totachi 30.90 JD, Liqui Moly 44.90,
+15,000+ customers · 30,000+ orders delivered · 25,000+ cars saved in the app garage (updated by Mustafa, 25/11; replaces 3,400 / 5,000 / 15,800) · packages: Totachi 30.90 JD, Liqui Moly 44.90,
 Senfineco 39.90, Shell 24.90, Valvoline 28.90, Kixx 29.90 (4L + oil filter + air filter + delivery). Oil change every ~5 months.
 Do not invent any other number, price, discount or claim. Do not show competitor names or logos.
 
