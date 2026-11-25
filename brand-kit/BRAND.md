@@ -36,6 +36,9 @@ Mux: ffmpeg -i silent.mp4 -i music.wav -map 0:v -map 1:a -c:v copy -af "loudnorm
 ## Facts you may use (verified)
 15,000+ customers · 30,000+ orders delivered · 25,000+ cars saved in the app garage (updated by Mustafa, 25/11; replaces 3,400 / 5,000 / 15,800) · packages: Totachi 30.90 JD, Liqui Moly 44.90,
 Senfineco 39.90, Shell 24.90, Valvoline 28.90, Kixx 29.90 (4L + oil filter + air filter + delivery). Oil change every ~5 months.
+Black Friday offer (approved by Mustafa 25/11), valid 27/11 to 30/11 only:
+- any oil package (all brands) -> free Senfineco (German) fuel injector cleaner as a gift (image: c_inj.png)
+- 20% off all spark plugs · 20% off brakes (to confirm: all brake brands? automatic in app or a code?)
 Do not invent any other number, price, discount or claim. Do not show competitor names or logos.
 
 ## Rules
