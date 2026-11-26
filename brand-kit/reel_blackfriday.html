@@ -1,0 +1,44 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:700;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-700-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-800-normal.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#000}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#C8102E',R2='#E0153A',K='#0A0A0C',G='#8E8E96';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3),eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.8;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs>
+<radialGradient id="spot" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#26262c"/><stop offset=".6" stop-color="#0d0d10"/><stop offset="1" stop-color="#000"/></radialGradient>
+<radialGradient id="spotR" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#3a0a12"/><stop offset=".7" stop-color="#0d0d10"/><stop offset="1" stop-color="#000"/></radialGradient>
+<linearGradient id="sweep" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="refl"><feGaussianBlur stdDeviation="6"/></filter></defs>`;
+const BG=(f='url(#spot)')=>`<rect width="1080" height="1920" fill="${f}"/>`;
+function word(txt,x,y,size,fill,p,weight=900,dir='rtl'){return `<text x="${x}" y="${y+(1-p)*40}" text-anchor="middle" direction="${dir}" font-size="${size}" font-weight="${weight}" fill="${fill}" opacity="${p}">${txt}</text>`}
+function bar(lt,y,w=320){const p=eio(lt/0.5);return `<rect x="${540-w/2*p}" y="${y}" width="${w*p}" height="9" fill="${R}"/>`}
+function img(h,cx,cy,s,p,refl=true){const y=cy-s/2+(1-p)*60;let o=`<g opacity="${p}"><image href="${h}" x="${cx-s/2}" y="${y}" width="${s}" height="${s}"/>`;
+ if(refl)o+=`<g transform="translate(0 ${2*(y+s)}) scale(1 -1)" opacity=".18"><image href="${h}" x="${cx-s/2}" y="${y}" width="${s}" height="${s}" filter="url(#refl)"/></g>`;return o+`</g>`}
+function sweep(lt,d){const sw=-600+1900*eio(lt/d);return `<rect x="${sw}" y="0" width="300" height="1920" fill="url(#sweep)" transform="skewX(-12)"/>`}
+function pct(lt,y){const q=back(lt/0.35);return `<g transform="translate(540 ${y}) scale(${0.4+0.6*q})" opacity="${cl(q*2)}"><text text-anchor="middle" direction="ltr" font-size="330" font-weight="900" fill="${R2}">20%</text></g>`}
+const SC=[
+ [0.0,1.7,(t,lt)=>{const p=back(lt/0.3),q=eio((lt-0.55)/0.4);return BG(K)+`<g transform="translate(540 860) scale(${0.6+0.4*p})" opacity="${cl(p*2)}"><text text-anchor="middle" direction="ltr" font-size="190" font-weight="900" fill="#fff">BLACK</text><text y="190" text-anchor="middle" direction="ltr" font-size="190" font-weight="900" fill="${R2}">FRIDAY</text></g>`+word('بكارانتيم',540,1260,92,G,q,800)}],
+ [1.7,3.4,(t,lt)=>{const p=eio(lt/0.35),q=eio((lt-0.4)/0.4);return BG(K)+word('مش حرق أسعار…',540,880,110,'#fff',p)+word('هاي المرة هدية!',540,1060,130,R2,q)+bar(lt-0.8,1130,300)}],
+ [3.4,6.0,(t,lt)=>{const p=eio(lt/0.5),q=eio((lt-0.25)/0.5),r=eio((lt-0.6)/0.5);return BG()+img('o_tot.png',340,800,560,p)+img('sf.png',760,820,520,q)+sweep(lt,2.4)+word('مع أي باكج زيت',540,1330,104,'#fff',r)+word('كل الماركات',540,1460,76,G,eio((lt-0.9)/0.5),800)}],
+ [6.0,9.2,(t,lt)=>{const p=back(lt/0.45),q=eio((lt-0.5)/0.45),r=back((lt-1.1)/0.4);return BG('url(#spotR)')+`<g transform="translate(540 760) scale(${0.85+0.15*p}) translate(-540 -760)">`+img('c_inj.png',540,760,820,cl(p))+`</g>`+sweep(lt,2.6)+word('منظف بخاخات سنفينيكو الألماني',540,1300,70,'#fff',q,800)+`<g transform="translate(540 1470) scale(${0.6+0.4*r})" opacity="${cl(r*2)}"><rect x="-300" y="-95" width="600" height="135" rx="18" fill="${R}"/><text y="10" text-anchor="middle" font-size="96" font-weight="900" fill="#fff">هدية مجاناً</text></g>`}],
+ [9.2,10.3,(t,lt)=>{const p=back(lt/0.3);return BG(K)+`<g transform="translate(540 1000) scale(${0.7+0.3*p})" opacity="${cl(p*2)}"><text text-anchor="middle" font-size="200" font-weight="900" fill="#fff">وكمان…</text></g>`}],
+ [10.3,13.1,(t,lt)=>{const q=eio((lt-0.35)/0.4),r=eio((lt-0.5)/0.5);return BG()+pct(lt,720)+word('خصم على كل البواجي',540,900,96,'#fff',q)+img('c_denso2.png',330,1260,520,r)+img('c_mobis.png',770,1270,460,eio((lt-0.7)/0.5))}],
+ [13.1,15.9,(t,lt)=>{const q=eio((lt-0.35)/0.4),r=eio((lt-0.5)/0.5);return BG()+pct(lt,720)+word('خصم على البريكات',540,900,100,'#fff',q)+img('c_ate.png',330,1260,500,r)+img('c_he.png',770,1270,470,eio((lt-0.7)/0.5))}],
+ [15.9,18.4,(t,lt)=>{const p=eio(lt/0.35),q=back((lt-0.35)/0.4),r=eio((lt-0.9)/0.4);return BG(K)+word('من 27 لـ 30 نوفمبر',540,760,104,'#fff',p)+`<g transform="translate(540 1040) scale(${0.5+0.5*q})" opacity="${cl(q*2)}"><text text-anchor="middle" font-size="250" font-weight="900" fill="${R2}">4 أيام</text></g>`+word('وبس.',540,1240,110,G,r)}],
+ [18.4,20.6,(t,lt)=>{const p=eio(lt/0.35),q=eio((lt-0.35)/0.4),r=eio((lt-0.7)/0.4);return BG(K)+word('أصلي.',540,780,150,'#fff',p)+word('مطابق برقم الشاصي.',540,960,104,'#fff',q)+word('ودفع عند الاستلام.',540,1120,92,G,r,800)+bar(lt-1,1180,320)}],
+ [20.6,24.0,(t,lt)=>{const p=back(lt/0.45),u=eio((lt-0.6)/0.5),v=eio((lt-1.1)/0.5);return BG()+`<g transform="translate(540 820) scale(${cl(p,0,1.2)})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164"/></g>`+word('اطلب العرض من التطبيق',540,1100,80,'#fff',u)+word('أو واتساب 0785040907',540,1230,64,G,v,800)+`<rect x="${540-150*v}" y="1290" width="${300*v}" height="8" fill="${R}"/>`+word('حتى 30/11',540,1420,70,R2,eio((lt-1.6)/0.5),800)}]
+];
+window.CUTS=SC.map(s=>s[0]);window.TOTAL=24;
+function frame(t){let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const lt=t-SC[i][0];
+ let s=DEF+SC[i][2](t,lt);
+ if([0,4,5,6,7].includes(i)&&lt<0.09)s+=`<rect width="1080" height="1920" fill="${i==0?'#fff':R}" opacity="${0.55*(1-lt/0.09)}"/>`;
+ document.getElementById('st').innerHTML=s;}
+frame(0);
+</script></body></html>
