@@ -1,0 +1,67 @@
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:TJ;font-weight:800;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-800-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:TJ;font-weight:900;src:url(node_modules/@fontsource/tajawal/files/tajawal-latin-900-normal.woff2);unicode-range:U+0000-00FF}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:TJ;background:#D0102C}
+#st{position:absolute;inset:0}
+</style></head><body><svg id="st" direction="rtl" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const R='#D0102C',W='#FFFFFF',K='#111114',BPM=108,B=60/BPM;
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>1-Math.pow(1-cl(x),3);
+const back=x=>{x=cl(x);const c=2;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const DEF=`<defs><filter id="blk"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 0"/></filter><filter id="sh"><feDropShadow dx="0" dy="24" stdDeviation="18" flood-opacity=".28"/></filter></defs>`;
+// scenes: [beats, bg, render(lt, bl) ] lt=seconds local, bl=beats local
+function lines(arr,fg,y0,size,lt,gap){ // arr of strings, each line pops on a sub-beat
+ let s='';arr.forEach((l,i)=>{const t0=i*0.18;const p=back((lt-t0)/0.28);if(lt<t0)return;
+  s+=`<text x="540" y="${y0+i*gap}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}" transform="translate(540 ${y0+i*gap-size/3}) scale(${0.6+0.4*p}) translate(-540 ${-(y0+i*gap-size/3)})" opacity="${cl(p*1.5)}">${l}</text>`});return s}
+function fly(img,w,x0,y0,x1,y1,lt,dur=0.45,rot=-18){const p=ease(lt/dur);const x=x0+(x1-x0)*p,y=y0+(y1-y0)*p;const fl=Math.sin(lt*3)*8;
+ return `<g transform="translate(${x} ${y+fl}) rotate(${rot*(1-p)+Math.sin(lt*2)*3})" filter="url(#sh)"><image href="${img}" x="${-w/2}" y="${-w/2}" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet"/></g>`}
+function echo(txt,fg,lt,size=150){let s='';const n=9;
+ for(let i=0;i<n;i++){const off=(i-4)*size*0.82;const p=ease((lt-Math.abs(i-4)*0.04)/0.3);if(i===4)continue;
+  s+=`<text x="540" y="${980+off*p}" text-anchor="middle" font-size="${size}" font-weight="900" fill="none" stroke="${fg}" stroke-width="3" opacity="${(1-Math.abs(i-4)/5)*p}">${txt}</text>`}
+ s+=`<text x="540" y="980" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}">${txt}</text>`;return s}
+function check(txt,bg,fg,lt){const p=back(lt/0.35);
+ return `<g transform="translate(540 760) scale(${p})"><circle r="120" fill="${fg}"/><path d="M-52 4 L-14 42 L58 -40" stroke="${bg}" stroke-width="30" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="200" stroke-dashoffset="${200*(1-ease((lt-0.15)/0.3))}"/></g>`+lines(txt,fg,1060,96,lt-0.2,118)}
+
+function big(txt,fg,lt,y=1080,size=330){const p=back(lt/0.35);return `<text x="540" y="${y}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}" transform="translate(540 ${y-size/3}) scale(${0.5+0.5*p}) translate(-540 ${-(y-size/3)})" direction="rtl">${txt}</text>`}
+const PADS=['c_ate.png','c_ak.png','c_textar.png'];
+function pads(t){let s='';const X=[260,820,540],Y1=[1290,1320,1470];for(let k=0;k<3;k++){s+=fly(PADS[k],380,X[k],2300+k*80,X[k],Y1[k],t-k*0.1,0.45,k%2?16:-16)}return s}
+function wave(t,col){let d='';const amp=60+30*Math.sin(t*40);for(let x=90;x<=990;x+=15){const y=1380+Math.sin(x*0.09+t*60)*amp*Math.sin((x-90)/900*Math.PI);d+=(x==90?'M':'L')+x+' '+y.toFixed(1)}
+ return `<path d="${d}" stroke="${col}" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`}
+function shake(t,str){const a=str*Math.exp(-t*3);return `translate(${(Math.sin(t*90)*a).toFixed(1)} ${(Math.cos(t*77)*a).toFixed(1)})`}
+function num(n,t){const p=back(t/0.3);return `<g transform="translate(540 600) scale(${p})"><circle r="105" fill="${R}"/><text y="44" text-anchor="middle" font-size="130" font-weight="900" fill="${W}">${n}</text></g>`}
+function endc(t){const p=back(t/0.45);return `<g transform="translate(540 760) scale(${p})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164" filter="url(#blk)"/></g>`+lines(['فحمات بريك أصلية','مطابقة لسيارتك'],K,1010,92,t-0.3,120)+`<g opacity="${ease((t-0.8)/0.4)}"><rect x="200" y="1200" width="680" height="110" rx="55" fill="${R}"/><text x="540" y="1272" text-anchor="middle" font-size="54" font-weight="900" fill="${W}">اطلب من التطبيق</text><text x="540" y="1410" text-anchor="middle" font-size="44" font-weight="800" fill="#8E8E96">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`}
+
+
+function cal(n,lt){ // flip calendar 27->28->29
+ const fl=[0.55,1.25];let d=27,sq=1;fl.forEach((f,k)=>{if(lt>=f)d=28+k;const x=(lt-f)/0.16;if(x>-1&&x<1)sq=Math.min(sq,Math.abs(x))});
+ const p=back(lt/0.35);
+ return `<g transform="translate(540 960) scale(${p})" filter="url(#sh)"><rect x="-260" y="-300" width="520" height="600" rx="44" fill="${W}"/><path d="M-260 -256 a44 44 0 0 1 44 -44 h432 a44 44 0 0 1 44 44 v96 h-520z" fill="${K}"/><text y="-200" text-anchor="middle" font-size="70" font-weight="900" fill="${W}">نوفمبر</text>
+ <circle cx="-150" cy="-300" r="18" fill="#8E8E96"/><circle cx="150" cy="-300" r="18" fill="#8E8E96"/>
+ <g transform="translate(0 90) scale(1 ${Math.max(0.05,sq)})"><text y="110" text-anchor="middle" font-size="330" font-weight="900" fill="${d==29?R:K}">${d}</text></g></g>`}
+function clock(lt){const a=lt*300,p=back(lt/0.35);let s=`<g transform="translate(540 860) scale(${p})"><circle r="250" fill="none" stroke="${W}" stroke-width="22"/>`;
+ for(let k=0;k<12;k++){const r=k*30*Math.PI/180;s+=`<line x1="${Math.sin(r)*200}" y1="${-Math.cos(r)*200}" x2="${Math.sin(r)*228}" y2="${-Math.cos(r)*228}" stroke="${W}" stroke-width="10" stroke-linecap="round"/>`}
+ const ar=(a%360)*Math.PI/180;const ex=Math.sin(ar)*250,ey=-Math.cos(ar)*250,lg=(a%360)>180?1:0;
+ s+=`<path d="M0 -250 A250 250 0 ${lg} 1 ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="${R}" stroke-width="22" fill="none" stroke-linecap="round"/>`;
+ s+=`<line x1="0" y1="0" x2="${(Math.sin(ar)*170).toFixed(1)}" y2="${(-Math.cos(ar)*170).toFixed(1)}" stroke="${R}" stroke-width="16" stroke-linecap="round"/><circle r="22" fill="${W}"/></g>`;return s}
+function pill(txt,bg,fg,y,w,lt,size=68){const o=ease(lt/0.25);return `<g opacity="${o}" transform="translate(540 ${y}) scale(${0.8+0.2*back(lt/0.3)})"><rect x="${-w/2}" y="-62" width="${w}" height="124" rx="62" fill="${bg}"/><text y="${size*0.36}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${fg}">${txt}</text></g>`}
+function endR(t){const p=back(t/0.45);return `<g transform="translate(540 560) scale(${p})"><image href="logo_w.png" x="-400" y="-82" width="800" height="164"/></g>`+lines(['اطلب عرضك قبل ما يخلص'],W,820,80,t-0.3,0)+pill('اطلب من التطبيق',W,R,1000,680,t-0.7,58)+`<g opacity="${ease((t-1.0)/0.4)}"><text x="540" y="1200" text-anchor="middle" font-size="60" font-weight="900" fill="${W}">أو واتساب 0785040907</text><text x="540" y="1300" text-anchor="middle" font-size="44" font-weight="800" fill="#FFD9DE">توصيل لكل المحافظات · دفع عند الاستلام</text></g>`+pill('العرض لحد 30/11',K,W,1470,560,t-1.4,60)}
+const SC=[
+ [5,R,(t)=>lines(['عرض Black Friday'],W,470,92,t,0)+cal(0,t)+lines(['باقي يومين بس!'],W,1490,120,t-1.5,0)],
+ [3,K,(t)=>echo('وبيخلص',W,t,190)+pill('30/11 آخر يوم',R,W,1290,620,t-0.3,84)],
+ [6,R,(t)=>lines(['مع أي باكج زيت'],W,470,100,t,0)+fly('c_inj.png',560,540,2300,540,900,t-0.2,0.45,-14)+lines(['منظف بخاخات سنفينيكو'],W,1300,74,t-0.6,0)+pill('هدية مجاناً',W,R,1450,500,t-0.9)],
+ [4,W,(t)=>lines(['كل باكجات الزيت'],K,560,104,t,0)+lines(['داخلة بالعرض'],R,690,90,t-0.25,0)+fly('o_tot.png',380,280,2300,280,1150,t-0.4,0.45,-16)+fly('sf.png',380,800,2300,800,1170,t-0.5,0.45,16)+fly('c_lm.png',360,540,2300,540,1300,t-0.6,0.45,-10)],
+ [4,R,(t)=>big('20%',W,t,800,330)+lines(['خصم على كل البواجي'],W,1000,92,t-0.35,0)+fly('c_denso2.png',330,340,2300,340,1330,t-0.6,0.45,-12)+fly('c_mobis.png',330,740,2300,740,1330,t-0.7,0.45,12)],
+ [4,R,(t)=>big('20%',W,t,800,330)+lines(['خصم على البريكات'],W,1000,92,t-0.35,0)+fly('c_ate.png',330,340,2300,340,1330,t-0.6,0.45,-12)+fly('c_textar.png',330,740,2300,740,1330,t-0.7,0.45,12)],
+ [4,K,(t)=>clock(t)+lines(['لا تستنى','لآخر لحظة'],W,1320,110,t-0.4,140)],
+ [8,R,(t)=>endR(t)]
+];
+let acc=0;const ST=SC.map(s=>{const a=acc;acc+=s[0];return a});const TOT=acc*B+0.6;
+window.CUTS=ST; window.TOTAL=TOT;
+function frame(t){let i=SC.length-1;for(let k=0;k<SC.length;k++)if(t>=ST[k]*B)i=k;const lt=t-ST[i]*B;const sc=SC[i];
+ const prev=SC[Math.max(0,i-1)][1];const wp=ease(lt/0.14);
+ let s=DEF+`<rect width="1080" height="1920" fill="${i?prev:sc[1]}"/><rect y="${(1-wp)*1920}" width="1080" height="1920" fill="${sc[1]}"/>`;
+ s+=`<g opacity="${cl(lt/0.06)}">${sc[2](lt)}</g>`;
+ document.getElementById('st').innerHTML=s;}
+frame(0);
+</script></body></html>
